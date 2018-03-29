@@ -11,6 +11,7 @@ namespace AutomatedReports;
 use \PDO;
 use \PDOException;
 
+
 class Repository
 {
 
@@ -28,6 +29,9 @@ class Repository
     }
 
     public function __construct(){
+
+
+
         $dsn = 'mysql:host='. $this->host . ';dbname='. $this->databaseName;
         $options = array(
             PDO::ATTR_PERSISTENT => true,
