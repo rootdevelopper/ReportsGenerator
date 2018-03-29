@@ -1,4 +1,4 @@
-*.env
-/vendor
-*.csv
-.idea/*
+.env
+.idea/
+/vendor/
+.DS_Store
