@@ -51,13 +51,12 @@ class Reports {
         $this->createFile(array_unique($headers), $rows, $fileName);
     }
 
-    function createFile($headers, $rows, $fileName)
-    {
-          $this->fileHandler->createCSVFile($headers, $rows, $fileName);
+    function createFile($headers, $rows, $fileName){
+        $this->uploadData($this->fileHandler->createCSVFile($headers, $rows, $fileName), $fileName);
     }
 
-    function uploadData(){
-        $this->fileHandler->uploadFileToGoogleDrive();
+    function uploadData($toDestination, $reportName){
+        $this->fileHandler->uploadFileToGoogleDrive($toDestination, $reportName);
         return 'ok';
     }
 

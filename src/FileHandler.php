@@ -8,26 +8,23 @@ class FileHandler
     private $googleDrive;
     private $filesPath = 'reports/';
 
-    function status(){
-        return 'ok';
-    }
-
-    function __construct()
-    {
+    function __construct(){
         $this->googleDrive = new GoogleDriveFileUploader();
     }
 
     function createCSVFile($headers, $rows, $fileName ){
-         $file = fopen($this->filesPath . $fileName, 'w');
-         //$file = fopen('reports/' . $fileName, 'w');
+
+        $file = fopen($this->filesPath . $fileName, 'w');
          fputcsv($file, $headers);
          foreach ($rows as $row) {
              fputcsv($file, $row);
          }
          fclose($file);
+
+        return $this->filesPath . $fileName;
      }
 
-     function uploadFileToGoogleDrive(){
-        $this->googleDrive->setFiles($this->filesPath);
+     function uploadFileToGoogleDrive($toDestination, $reportName){
+        $this->googleDrive->setFiles($toDestination, $reportName);
      }
 }
