@@ -13,18 +13,11 @@ use PHPUnit\Framework\TestCase;
 
 class FileHandlerTest extends Testcase
 {
-
-//    //what should I test if there is no return?
-//    function testShould_Create_File(){
-//        $test = new FileHandler();
-//        $fileName = 'unitTest.csv';
-//        $headers = array("id", "company", "name", "TotalHours");
-//        $rows = array(array("300", "unitTestCo","unitT", "100"));
-//        $test-> $this->assertEquals(null, $test->createCSVFile($headers, $rows, $fileName));
-//    }
-
-    function testStatus(){
+    function test_Should_Create_File(){
         $test = new FileHandler();
-        $this->assertEquals('ok', $test->status());
+        $fileName = 'unitTest.csv';
+        $headers = array("id", "company", "name", "TotalHours");
+        $rows = array(array("300", "unitTestCo","unitT", "100"));
+        $this->assertEquals(string, gettype($test->createCSVFile($headers, $rows, $fileName)));
     }
 }

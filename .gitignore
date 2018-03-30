@@ -3,5 +3,6 @@
 /vendor/
 .DS_Store
 reports/*.csv
+*.csv
 client_secret.json
 credentials/
