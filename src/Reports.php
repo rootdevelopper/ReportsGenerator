@@ -57,10 +57,8 @@ class Reports {
     }
 
     function uploadData(){
-        //working on google drive credentials
-        //$this->fileHandler->uploadFile($source, $destination);
-          return 'ok';
-
+        $this->fileHandler->uploadFileToGoogleDrive();
+        return 'ok';
     }
 
 

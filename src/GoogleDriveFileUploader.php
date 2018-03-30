@@ -1,83 +1,50 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hceudev
- * Date: 3/29/18
- * Time: 4:52 PM
- */
 
 namespace AutomatedReports;
 
-require_once __DIR__ . '/vendor/autoload.php';
+class GoogleDriveFileUploader{
+    private $client;
 
-define('APPLICATION_NAME', 'Drive API PHP Quickstart');
-define('CREDENTIALS_PATH', '~/.credentials/drive-php-quickstart.json');
-define('CLIENT_SECRET_PATH', __DIR__ . '/client_secret.json');
-// If modifying these scopes, delete your previously saved credentials
-// at ~/.credentials/drive-php-quickstart.json
-define('SCOPES', implode(' ', array(
-        Google_Service_Drive::DRIVE_METADATA_READONLY)
-));
-
-class GoogleDriveFileUploader
-{
-
-        function setdate()
-        {
-    date_default_timezone_set('America/New_York'); // Prevent DateTime tz exception
-    if (php_sapi_name() != 'cli')
-    {
-    throw new Exception('This application must be run on the command line.');
-    }
-    }
-
-/**
- * Returns an authorized API client.
- * @return Google_Client the authorized client object
- */
 function getClient() {
-    $client = new Google_Client();
-    $client->setApplicationName(APPLICATION_NAME);
-    $client->setScopes(SCOPES);
-    $client->setAuthConfig(CLIENT_SECRET_PATH);
-    $client->setAccessType('offline');
+    $this->client = new \Google_Client();
+    $this->client->setApplicationName(APPLICATION_NAME);
+    $this->client->setScopes(SCOPES);
+    $this->client->setAuthConfig(CLIENT_SECRET_PATH);
+    $this->client->setAccessType('offline');
 
-    // Load previously authorized credentials from a file.
-    $credentialsPath = expandHomeDirectory(CREDENTIALS_PATH);
-    if (file_exists($credentialsPath)) {
+    $credentialsPath = $this->expandHomeDirectory(CREDENTIALS_PATH);
+
+     if (file_exists($credentialsPath)) {
         $accessToken = json_decode(file_get_contents($credentialsPath), true);
     } else {
+
         // Request authorization from the user.
-        $authUrl = $client->createAuthUrl();
+        $authUrl = $this->client->createAuthUrl();
         printf("Open the following link in your browser:\n%s\n", $authUrl);
         print 'Enter verification code: ';
-        $authCode = trim(fgets(STDIN));
+        $pasteYourVerificationCodeHere = '';
+        $authCode = trim($pasteYourVerificationCodeHere);
+        $accessToken = $this->client->fetchAccessTokenWithAuthCode($authCode);
 
-        // Exchange authorization code for an access token.
-        $accessToken = $client->fetchAccessTokenWithAuthCode($authCode);
-
-        // Store the credentials to disk.
+        // Store the credentials to disk, this credentials will expire in the set time
         if(!file_exists(dirname($credentialsPath))) {
             mkdir(dirname($credentialsPath), 0700, true);
         }
         file_put_contents($credentialsPath, json_encode($accessToken));
-        printf("Credentials saved to %s\n", $credentialsPath);
-    }
-    $client->setAccessToken($accessToken);
+        //printf("Credentials saved to %s\n", $credentialsPath);
+   }
 
-    // Refresh the token if it's expired.
-    if ($client->isAccessTokenExpired()) {
-        $client->fetchAccessTokenWithRefreshToken($client->getRefreshToken());
-        file_put_contents($credentialsPath, json_encode($client->getAccessToken()));
+    $this->client->setAccessToken($accessToken);
+
+    // Refresh the token if it's expired and save it for next time
+    if ($this->client->isAccessTokenExpired()) {
+        $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+        file_put_contents($credentialsPath, json_encode($this->client->getAccessToken()));
     }
-    return $client;
+    return $this->client;
 }
 
-/**
- * Expands the home directory alias '~' to the full path.
- * @param string $path the path to expand.
- * @return string the expanded path.
- */
+
 function expandHomeDirectory($path) {
     $homeDirectory = getenv('HOME');
     if (empty($homeDirectory)) {
@@ -86,28 +53,24 @@ function expandHomeDirectory($path) {
     return str_replace('~', realpath($homeDirectory), $path);
 }
 
-// Get the API client and construct the service object.
-function setFiles()
+function setFiles($filesPath)
 {
-    $client = getClient();
-    $service = new Google_Service_Drive($client);
+    $filesLocation = ROOT_PATH.$filesPath;
+    $client = $this->getClient();
+    $service = new \Google_Service_Drive($client);
+    $fileMetadata = new \Google_Service_Drive_DriveFile(array(
+        'name' => 'My Report2',
+        'mimeType' => 'application/vnd.google-apps.spreadsheet'));
 
-// Print the names and IDs for up to 10 files.
-    $optParams = array(
-        'pageSize' => 10,
-        'fields' => 'nextPageToken, files(id, name)'
-    );
-    $results = $service->files->listFiles($optParams);
+    $content = file_get_contents($filesLocation.'3test.csv');
+    $file = $service->files->create($fileMetadata, array(
+        'data' => $content,
+        'mimeType' => 'text/csv',
+        'uploadType' => 'multipart',
+        'fields' => 'id'));
+    printf("File ID: %s\n", $file->id);
 
-    if (count($results->getFiles()) == 0) {
-        print "No files found.\n";
-    } else {
-        print "Files:\n";
-        foreach ($results->getFiles() as $file) {
-            printf("%s (%s)\n", $file->getName(), $file->getId());
-        }
-    }
-}
+  }
 
 }
 

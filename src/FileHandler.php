@@ -1,23 +1,25 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hceudev
- * Date: 3/29/18
- * Time: 8:39 AM
- */
 
 namespace AutomatedReports;
 
 
 class FileHandler
 {
+    private $googleDrive;
+    private $filesPath = 'reports/';
+
     function status(){
         return 'ok';
     }
 
-     function createCSVFile($headers, $rows, $fileName ){
+    function __construct()
+    {
+        $this->googleDrive = new GoogleDriveFileUploader();
+    }
 
-         $file = fopen('reports/' . $fileName, 'w');
+    function createCSVFile($headers, $rows, $fileName ){
+         $file = fopen($this->filesPath . $fileName, 'w');
+         //$file = fopen('reports/' . $fileName, 'w');
          fputcsv($file, $headers);
          foreach ($rows as $row) {
              fputcsv($file, $row);
@@ -25,10 +27,7 @@ class FileHandler
          fclose($file);
      }
 
-     function uploadFile($source, $destination){
-
-
-
+     function uploadFileToGoogleDrive(){
+        $this->googleDrive->setFiles($this->filesPath);
      }
-
 }

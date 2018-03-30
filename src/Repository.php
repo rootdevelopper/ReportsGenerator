@@ -1,19 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hceudev
- * Date: 3/28/18
- * Time: 11:48 AM
- */
 
 namespace AutomatedReports;
 
 use \PDO;
 use \PDOException;
 
-
-class Repository
-{
+class Repository {
 
     private $host = DB_HOST;
     private $user = DB_USER;
@@ -29,8 +21,6 @@ class Repository
     }
 
     public function __construct(){
-
-
 
         $dsn = 'mysql:host='. $this->host . ';dbname='. $this->databaseName;
         $options = array(
