@@ -24,11 +24,11 @@ class ReportsTest extends TestCase {
         $this->assertEquals(null, $test->processData($testData));
     }
 
-    function UploadData(){
+    function test_Should_UploadData(){
         $test = new Reports();
         $toDestination = 'reports/unitTest.csv';
         $reportName = 'unitTest.csv';
-        $this->assertEquals('ok', $test->uploadData());
+        $this->assertEquals('ok', $test->uploadData($toDestination, $reportName));
     }
 
     function test_Should_CreateFile(){
