@@ -2,7 +2,9 @@
 .idea/
 /vendor/
 .DS_Store
-reports/*.csv
 *.csv
+reports/*.csv
+/reports/*.csv
+
 client_secret.json
 credentials/
