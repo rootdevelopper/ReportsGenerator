@@ -11,5 +11,4 @@ class RepositoryTest extends TestCase
       $test = new Repository();
       $this->assertEquals('ok', $test->status());
   }
-
 }
