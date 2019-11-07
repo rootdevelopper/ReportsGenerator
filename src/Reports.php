@@ -15,9 +15,13 @@ class Reports {
     function fetchData(){
         $queueReports = $this->findPendingReports();
         $queries = $this->fetchStoredQueries(implode(",", $queueReports));
+       // var_dump($queries);
         foreach ($queries as $run){
-            $this->database->query($run->query);
+
+            //$this->database->query($run->query);
+            $this->database->query($run->task);
             $result = $this->database->resultSet();
+            var_dump($result);
             $this->processData(json_encode($result, true));
         }
     }
@@ -27,6 +31,7 @@ class Reports {
         $this->database->query($sql);
         $result = $this->database->resultSet();
         $results = array();
+        //var_dump($result);
         foreach($result as $key => $value){
             $results[] = $value->queryid;
         }
@@ -35,7 +40,8 @@ class Reports {
     }
 
     function fetchStoredQueries($pendingReports){
-        $sql = 'select distinct query from Reports.Reports where id in (' . $pendingReports . ')';
+        //$sql = 'select distinct query from Reports.Reports where id in (' . $pendingReports . ')';
+        $sql = 'select distinct task from reporting.tasks';
         $this->database->query($sql);
         $results = $this->database->resultSet();
         return $results;

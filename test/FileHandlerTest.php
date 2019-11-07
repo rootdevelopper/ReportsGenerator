@@ -20,4 +20,9 @@ class FileHandlerTest extends Testcase
         $rows = array(array("300", "unitTestCo","unitT", "100"));
         $this->assertEquals(string, gettype($test->createCSVFile($headers, $rows, $fileName)));
     }
+
+//    function test_files_Should_be_writable(){
+//
+//    }
+
 }

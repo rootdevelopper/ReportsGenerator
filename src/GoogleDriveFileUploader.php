@@ -16,7 +16,7 @@ function getClient() {
     $credentialsPath = $this->expandHomeDirectory(CREDENTIALS_PATH);
     /*the credentials will expire */
     /*Google require manual authorization for this api*/
-    //comment out if statemenet below and uncomment $accessToken
+    //comment out if statement below and uncomment $accessToken
 
      if (file_exists($credentialsPath)) {
         $accessToken = json_decode(file_get_contents($credentialsPath), true);
@@ -25,7 +25,7 @@ function getClient() {
      }
 
      //uncomment this $access token if credentials expire and need to manualy grant permission
-    //$accessToken = $this->coppyAndPasteCredentials($credentialsPath);
+    //$accessToken = $this->copyAndPasteCredentials($credentialsPath);
 
     $this->client->setAccessToken($accessToken);
 
